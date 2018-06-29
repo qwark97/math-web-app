@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang='pl'>
+    <head>
+       <meta charset="utf-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+       <link rel="stylesheet" href="css/bootstrap.min.css">
+       <script src="js/index.js"></script>
+       <script src="https://unpkg.com/mathjs@4.3.0/dist/math.min.js"></script>
+       <script src="js/math.min.js"></script>
+       <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+       <script src="js/plotly.min.js"></script>
+       <script>   
+            const draw = () => {
+                let expression = document.getElementById("eq").value
+                let expr = math.compile(expression)
+                let xValues = math.range(-10, 10, 0.5).toArray()
+                let yValues = xValues.map(x => expr.eval({x: x}))
+                let trace1 = {
+                    x: xValues,
+                    y: yValues,
+                    type: "scatter"
+                }
+                let data = [trace1]
+                Plotly.newPlot("plot", data)
+            }
+       </script>
+       <title>Metoda najmniejszych kwadratów</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" style="padding-top: 15px;">
+                <div class="col-6">
+                    <h5><label for="selectFunc">Rodzaj funkcji: </label></h5>
+                    <select class="custom-select" id="selectFunc" onchange="selectedOption()">
+                        <option class="active">Wybierz...</option>
+                        <option value="linear">Liniowa</option>
+                        <optgroup label="Wielomianowa">
+                            <option value="polynomial;2">Kwadratowa</option>
+                            <option value="polynomial;3">Trzeciego stopnia</option>
+                            <option value="polynomial;4">Czwartego stopnia</option>
+                            <option value="polynomial;5">Piątego stopnia</option>
+                        </optgroup>
+                        <option value="power">Wykładnicza</option>
+                        <option value="logarithmic">Logarytmiczna</option>
+                        <option value="exponential">Eksponencjalna</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <h5><label for="selectFunc">Precyzja wyniku: </label></h5>
+                    <select class="custom-select" id="selectPrec" onchange="getPrec()">
+                        <option class="active">Wybierz...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 15px;">
+                <h5>Współrzędne punktów: </h5>
+            </div>
+            <div class="row" style="padding-top: 15px;">
+                <h5 class="col font-weight-bold text-center">Współrzędna X</h5>
+                <h5 class="col font-weight-bold text-center">Współrzędna Y</h5>
+            </div>
+            <div class="row" style="padding-top: 15px;">
+                <form id="X" class="form-group col">
+                    <input class="form-control" type="text" placeholder="X"></input><br />
+                </form>
+                <form id="Y" class="form-group col">
+                    <input class="form-control" type="text" placeholder="Y"></input><br />
+                </form>
+            </div>
+            <div class="row justify-content-center" id="buttons">
+                <div class="col-6">
+                    <div class="btn-group btn-group-lg" role="group" aria-label="opcje">
+                        <button type="button" class="btn btn-outline-primary col" onclick="addPoint()">Dodaj punkt</button>
+                        <button type="button" class="btn btn-outline-secondary col" onclick="removeLast()">Usuń ostatni</button>
+                        <button type="button" class="btn btn-outline-danger col" onclick="resetBtn()">Reset</button>
+                        <button type="button" class="btn btn-outline-primary col" onclick="output()">Policz i rysuj wykres</button>
+                    </div>
+                </div>
+            </div>
+            <div id="output" style="visibility: hidden;">
+                <h5 class="row" style="padding-top: 15px;" id="eqText">Wzór równania: </h5>
+                <h3 class="row font-weight-bold text-center" id="eq"> </h3>
+                <h5 class="row" style="padding-top: 25px;" id="ploText">Wykres: </h5>
+                <div class="row" id="plot"></div>
+            </div>
+        </div>
+    </body>
+</html>
